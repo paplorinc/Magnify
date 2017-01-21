@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Dict
 import Gui exposing (..)
-import Html
+import Html exposing ( Html )
 import Html.Attributes exposing (property)
 import Json.Decode as Json
 import Maybe exposing ( Maybe(..) )
@@ -13,7 +13,7 @@ import Tuple4 exposing (mapAll)
 import VirtualDom
 import Window
 
-type alias Model    = { size : Window.Size, pos : Position }
+type alias Model = { size : Window.Size, pos : Position }
 
 getWidth : { b | size : { a | width : number } } -> number
 getWidth model  = model.size.width  - 5 -- clientWidth?
@@ -38,10 +38,10 @@ update msg model = case msg of
 subscriptions : a -> Sub Msg
 subscriptions model = Window.resizes WindowSize
 
-view : Model -> Html.Html Msg
+view : Model -> Html Msg
 view model = Html.div [] [ scene model]
 
-scene : Model -> Html.Html Msg
+scene : Model -> Html Msg
 scene model = canvas (getWidth model) (getHeight model) (background model)
 
 background : Model -> Svg Msg
