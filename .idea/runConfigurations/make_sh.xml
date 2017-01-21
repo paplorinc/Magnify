@@ -8,9 +8,9 @@
     <option name="PARAMETERS" value="" />
     <module name="" />
     <envs />
-    <RunnerSettings RunnerId="JProfiler">
-      <option name="WINDOW" value="false" />
-    </RunnerSettings>
-    <method />
+    <method>
+      <option name="Make" enabled="false" />
+      <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_browse" />
+    </method>
   </configuration>
 </component>
