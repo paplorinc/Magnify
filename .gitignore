@@ -1,0 +1,5 @@
+/.idea
+/elm-stuff
+/repl-temp-*
+
+main.js
