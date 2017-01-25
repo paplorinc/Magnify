@@ -31,13 +31,13 @@ function = map3 Function (field "name"    <| string)
 ast : Dict String Function
 ast = decodeString (list function) """
 [{
-    "name":    "solve the quadratic equation (𝕔x² + 𝕓x + 𝕒 = 0)",
-    "inputs":  ["𝕔", "𝕓", "𝕒"],
-    "outputs": { "-𝕓±√Δ\\n————\\n 2𝕔":
-                   {"divide": [{"plus and minus": [{"negate": ["𝕓"]}
-                                                  ,{"sqrt": {"subtract":[{"square": ["𝕓"]}
-                                                                        ,{"multiply": ["4","𝕔","𝕒"]}]}}]}
-                              ,{"multiply": ["2","𝕔"]}]}}
+  "name":    "solve the quadratic equation (𝕔x² + 𝕓x + 𝕒 = 0)",
+  "inputs":  ["𝕔", "𝕓", "𝕒"],
+  "outputs": { "-𝕓±√Δ\\n————\\n 2𝕔":
+                 {"divide": [{"plus and minus": [{"negate": ["𝕓"]}
+                                                ,{"sqrt": {"subtract":[{"square": ["𝕓"]}
+                                                                      ,{"multiply": ["4","𝕔","𝕒"]}]}}]}
+                            ,{"multiply": ["2","𝕔"]}]}}
 }, {
   "name":    "solve the linear equation (𝕓x + 𝕒 = 0)",
   "inputs":  ["𝕓", "𝕒"],

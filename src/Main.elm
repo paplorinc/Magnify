@@ -39,7 +39,7 @@ subscriptions : a -> Sub Msg
 subscriptions model = Window.resizes WindowSize
 
 view : Model -> Html Msg
-view model = Html.div [] [ scene model]
+view model = Html.div [] [ scene model ]
 
 scene : Model -> Html Msg
 scene model = canvas (getWidth model) (getHeight model) (background model)
