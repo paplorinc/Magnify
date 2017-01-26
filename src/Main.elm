@@ -5,11 +5,9 @@ import Gui exposing (..)
 import Html exposing ( Html )
 import Html.Attributes exposing (property)
 import Json.Decode as Json
-import Maybe exposing ( Maybe(..) )
 import Svg exposing (Svg)
 import Svg.Attributes exposing (..)
 import Task
-import Tuple4 exposing (mapAll)
 import VirtualDom
 import Window
 
