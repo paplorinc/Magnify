@@ -1,5 +1,6 @@
 module Main exposing (..)
 
+import Ast exposing (ast, function)
 import Dict
 import Gui exposing (..)
 import Html exposing ( Html )
@@ -44,4 +45,6 @@ scene : Model -> Html Msg
 scene model = canvas (getWidth model) (getHeight model) (background model)
 
 background : Model -> Svg Msg
-background model = function "solve the quadratic equation (𝕔x² + 𝕓x + 𝕒 = 0)" 100.0 100.0 100.0 100.0
+background model = case Dict.get "solve the quadratic equation (𝕔x² + 𝕓x + 𝕒 = 0)" ast of
+                       Just f -> drawFunction f
+                       Nothing ->  Svg.g [] []

@@ -1,6 +1,6 @@
 module Gui exposing (..)
 
-import Ast exposing (ast)
+import Ast exposing (Function, ast)
 import Dict
 import Html exposing ( Html )
 import Html.Attributes exposing (property)
@@ -35,37 +35,31 @@ arrowHead = Svg.marker
     [ Svg.path [ d "M 0 0 L 10 5 L 0 10 z" ] [] ]
 
 
-arrow : List String -> Float -> Float -> Float -> Float -> Float -> List (Svg Msg)
-arrow values arrowWidth x_ y_ w_ h_ =
+arrow : List String -> Float -> Float -> Float -> List (Svg Msg)
+arrow values arrowWidth w_ h_ =
     let yPos index = let size = List.length values |> toFloat
                          spacing = h_ / (size + 1)
-                     in y_ + (1 + toFloat index) * spacing
-        x2 = x_ + arrowWidth
-    in values |> List.indexedMap (\i name -> let y = yPos i in parameter x_ x2 y y name)
+                     in (1 + toFloat index) * spacing
+    in values |> List.indexedMap (\i name -> let y = yPos i in drawParameter 0 arrowWidth y y name)
 
-parameter : Float -> Float -> Float -> Float -> String -> Svg Msg
-parameter x_ x2_ y_ y2_ name =
+drawParameter : Float -> Float -> Float -> Float -> String -> Svg Msg
+drawParameter x_ x2_ y_ y2_ name =
     let (lineX1, lineX2, lineY1, lineY2) = (x_, x2_, y_, y2_) |> Tuple4.mapAll toString
         (textX, textY) = (x_, y_) |> Tuple2.mapBoth toString
-    in Svg.g [] [ Svg.line [ x1 lineX1, x2 lineX2, y1 lineY1, y2 lineY2, stroke "red", strokeWidth "2" , markerEnd "url(#arrowHead)" ] []
+    in Svg.g [] [ Svg.line [ x1 lineX1, x2 lineX2, y1 lineY1, y2 lineY2, stroke "red", strokeWidth "2", markerEnd "url(#arrowHead)" ] []
                 , Svg.text_ [ x textX, y textY, textAnchor "start" ] (mapToSvg name textX textY) ]
 
-function : String -> Float -> Float -> Float -> Float -> Svg Msg
-function name x_ y_ w_ h_ =
-    let (posX, posY, sizeH, sizeV) = (x_, y_, w_, h_) |> Tuple4.mapAll toString
+estimateSize f = (100.0, 100.0) -- TODO
 
-        radius = sqrt 100.0 |> toString
-
-        (inputs, outputs) = Dict.get name ast
-                            |> Maybe.map (\f -> (f.inputs, f.outputs))
-                            |> Maybe.withDefault ([], Dict.empty)
+drawFunction : Function -> Svg Msg
+drawFunction f =
+    let (w_, h_) = estimateSize f
+        radius = w_ + h_ |> sqrt |> toString
 
         arrowWidth = 30
-        params = let x = x_ - arrowWidth
-                     values = inputs
-                 in arrow values arrowWidth x y_ w_ h_
-        returns = let x = x_ + w_
-                      values = Dict.keys outputs
-                  in arrow values arrowWidth x y_ w_ h_
-    in Svg.g []
-             ([ Svg.rect [ x posX, y posY, width sizeH, height sizeV, rx radius, ry radius, fill "gray" ] [] ] ++ params ++ returns)
+        params = arrow f.inputs arrowWidth w_ h_
+        returns = arrow (Dict.keys f.outputs) arrowWidth w_ h_
+    in Svg.g [ transform ("translate(100,100)")]
+             ([ Svg.rect [ x (toString arrowWidth), y "0", width (toString w_), height (toString h_), rx radius, ry radius, fill "gray" ] [] ]
+             ++ params
+             ++ [ Svg.g [ transform ("translate(" ++ toString (w_ + arrowWidth) ++ ")")] returns ])
