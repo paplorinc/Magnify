@@ -28,10 +28,11 @@ init = ( { size = Window.Size 600 600, pos = Position 0 0 }
        , Task.perform WindowSize Window.size)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model = case msg of
-                       WindowSize { width, height } -> ( { model | size = Window.Size width height }, Cmd.none )
-                       MouseMove pos                -> ( { model | pos = pos }, Cmd.none )
-                       _                            -> Debug.crash "update"
+update msg model =
+    case msg of
+        WindowSize { width, height } -> ( { model | size = Window.Size width height }, Cmd.none )
+        MouseMove pos                -> ( { model | pos = pos }, Cmd.none )
+        _                            -> Debug.crash "update"
 
 subscriptions : a -> Sub Msg
 subscriptions model = Window.resizes WindowSize
@@ -43,4 +44,4 @@ scene : Model -> Html Msg
 scene model = canvas (getWidth model) (getHeight model) (background model)
 
 background : Model -> Svg Msg
-background model = function "solve the quadratic equation (𝕔x² + 𝕓x + 𝕒 = 0)"
+background model = function "solve the quadratic equation (𝕔x² + 𝕓x + 𝕒 = 0)" 100.0 100.0 100.0 100.0
