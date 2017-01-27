@@ -6,8 +6,7 @@ import Svg.Attributes exposing (..)
 import Tags exposing (em)
 import Tuple2
 
-mapToSvg text textX textY = let
-                                lines = String.split "\n" text
+mapToSvg text textX textY = let lines = String.split "\n" text
                                 offsetX = em (maxLength lines / -2)
                                 offsetY i = let offset = toFloat (List.length lines - 1) / -4
                                             in em <| -(i + offset) * offset
