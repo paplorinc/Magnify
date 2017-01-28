@@ -1,6 +1,6 @@
 module Lists exposing (..)
 
-maxLength strings = List.map String.length strings
-                    |> List.maximum
-                    |> Maybe.withDefault 0
-                    |> toFloat
+maximum values mapper = List.map mapper values
+                        |> List.maximum
+                        |> Maybe.withDefault 0
+                        |> toFloat

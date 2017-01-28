@@ -5,13 +5,13 @@ import Dict
 import Html exposing ( Html )
 import Html.Attributes exposing (property)
 import Json.Decode as Json
-import Lists exposing (maxLength)
+import Lists exposing (maximum)
 import Maybe exposing ( Maybe(..) )
 import Svg exposing (Svg)
 import Svg.Attributes exposing (..)
 import Tags exposing (em)
 import Task
-import Texts exposing (mapToSvg)
+import Texts exposing (mapToSvg, splitText)
 import Tuple2
 import Tuple4
 import VirtualDom
@@ -36,30 +36,32 @@ arrowHead = Svg.marker
 
 
 arrow : List String -> Float -> Float -> Float -> List (Svg Msg)
-arrow values arrowWidth w_ h_ =
+arrow values arrowWidth x_ h_ =
     let yPos index = let size = List.length values |> toFloat
                          spacing = h_ / (size + 1)
                      in (1 + toFloat index) * spacing
-    in values |> List.indexedMap (\i name -> let y = yPos i in drawParameter 0 arrowWidth y y name)
+    in values |> List.indexedMap (\i name -> let y = yPos i |> em in drawParameter (em x_) (em (x_ + arrowWidth)) y y name)
 
-drawParameter : Float -> Float -> Float -> Float -> String -> Svg Msg
-drawParameter x_ x2_ y_ y2_ name =
-    let (lineX1, lineX2, lineY1, lineY2) = (x_, x2_, y_, y2_) |> Tuple4.mapAll toString
-        (textX, textY) = (x_, y_) |> Tuple2.mapBoth toString
-    in Svg.g [] [ Svg.line [ x1 lineX1, x2 lineX2, y1 lineY1, y2 lineY2, stroke "red", strokeWidth "2", markerEnd "url(#arrowHead)" ] []
-                , Svg.text_ [ x textX, y textY, textAnchor "start" ] (mapToSvg name textX textY) ]
+drawParameter : String -> String -> String -> String -> String -> Svg Msg
+drawParameter x1_ x2_ y1_ y2_ name =
+    Svg.g [] [ Svg.line [ x1 x1_, x2 x2_, y1 y1_, y2 y2_, stroke "red", strokeWidth "2", markerEnd "url(#arrowHead)" ] []
+             , Svg.text_ [ x x1_, y y1_, textAnchor "start" ] (mapToSvg name x1_ y1_) ]
 
-estimateSize f = (100.0, 100.0) -- TODO
+estimateSize : Function -> (Float, Float)
+estimateSize f =
+    let formattedOutputs = List.map splitText (Dict.keys f.outputs)
+        width = maximum formattedOutputs (\s -> maximum s String.length |> round)
+        height = Basics.max (List.length f.inputs) (List.length (List.foldl (++) [] formattedOutputs)) |> toFloat
+    in (width - 2, height + 1)
 
 drawFunction : Function -> Svg Msg
 drawFunction f =
     let (w_, h_) = estimateSize f
-        radius = w_ + h_ |> sqrt |> toString
-
-        arrowWidth = 30
-        params = arrow f.inputs arrowWidth w_ h_
-        returns = arrow (Dict.keys f.outputs) arrowWidth w_ h_
-    in Svg.g [ transform ("translate(100,100)")]
-             ([ Svg.rect [ x (toString arrowWidth), y "0", width (toString w_), height (toString h_), rx radius, ry radius, fill "gray" ] [] ]
+        radius = (w_ + h_) / 10 |> sqrt |> em
+        arrowWidth = 1
+        params = arrow f.inputs arrowWidth 0 h_
+        returns = arrow (Dict.keys f.outputs) arrowWidth (w_ + arrowWidth) h_
+    in Svg.g [ transform "translate(100,100)"]
+             ([ Svg.rect [ x (em arrowWidth), y "0", width <| em w_, height <| em h_, rx radius, ry radius, fill "gray" ] [] ]
              ++ params
-             ++ [ Svg.g [ transform ("translate(" ++ toString (w_ + arrowWidth) ++ ")")] returns ])
+             ++ returns)
