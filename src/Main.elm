@@ -1,5 +1,6 @@
 module Main exposing (..)
 
+import Animation exposing (translate)
 import Ast exposing (ast, function)
 import Dict
 import Gui exposing (..)
@@ -45,6 +46,6 @@ scene : Model -> Html Msg
 scene model = canvas (getWidth model) (getHeight model) (background model)
 
 background : Model -> Svg Msg
-background model = case Dict.get "solve the quadratic equation (𝕔x² + 𝕓x + 𝕒 = 0)" ast of
-                       Just f -> drawFunction f
-                       Nothing ->  Svg.g [] []
+background model = Dict.values ast
+                |> List.indexedMap (\i f -> drawFunction f |> Svg.g [ transform (String.concat ["translate(", toString (50 + i * 120), ",50)"]) ] )
+                |> Svg.g []

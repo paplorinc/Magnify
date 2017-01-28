@@ -50,18 +50,17 @@ drawParameter x1_ x2_ y1_ y2_ name =
 estimateSize : Function -> (Float, Float)
 estimateSize f =
     let formattedOutputs = List.map splitText (Dict.keys f.outputs)
-        width = maximum formattedOutputs (\s -> maximum s String.length |> round)
+        width = maximum formattedOutputs (\s -> maximum s String.length |> ceiling)
         height = Basics.max (List.length f.inputs) (List.length (List.foldl (++) [] formattedOutputs)) |> toFloat
-    in (width - 2, height + 1)
+    in (width - 1, height + 1)
 
-drawFunction : Function -> Svg Msg
+drawFunction : Function -> List (Svg Msg)
 drawFunction f =
     let (w_, h_) = estimateSize f
-        radius = (w_ + h_) / 10 |> sqrt |> em
+        radius = (w_ + h_) / 20 |> em
         arrowWidth = 1
         params = arrow f.inputs arrowWidth 0 h_
         returns = arrow (Dict.keys f.outputs) arrowWidth (w_ + arrowWidth) h_
-    in Svg.g [ transform "translate(100,100)"]
-             ([ Svg.rect [ x (em arrowWidth), y "0", width <| em w_, height <| em h_, rx radius, ry radius, fill "gray" ] [] ]
-             ++ params
-             ++ returns)
+    in [ Svg.rect [ x (em arrowWidth), y "0", width <| em w_, height <| em h_, rx radius, ry radius, fill "gray" ] [] ]
+       ++ params
+       ++ returns

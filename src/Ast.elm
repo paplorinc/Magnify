@@ -33,7 +33,7 @@ ast = decodeString (list function) """
 [{
   "name":    "solve the quadratic equation (𝕔x² + 𝕓x + 𝕒 = 0)",
   "inputs":  ["𝕔", "𝕓", "𝕒"],
-  "outputs": { "-𝕓±√Δ\\n———\\n 2𝕔":
+  "outputs": { "–𝕓±√Δ\\n———\\n 2𝕔":
                  {"divide": [{"plus and minus": [{"negate": ["𝕓"]}
                                                 ,{"sqrt": {"subtract":[{"square": ["𝕓"]}
                                                                       ,{"multiply": ["4","𝕔","𝕒"]}]}}]}
@@ -41,11 +41,11 @@ ast = decodeString (list function) """
 }, {
   "name":    "solve the linear equation (𝕓x + 𝕒 = 0)",
   "inputs":  ["𝕓", "𝕒"],
-  "outputs": {"-𝕒\\n——\\n𝕓": {"negate": {"divide": ["𝕒", "𝕓"]}}}
+  "outputs": {"–𝕒\\n—\\n 𝕓": {"negate": {"divide": ["𝕒", "𝕓"]}}}
 }, {
   "name":    "negate",
   "inputs":  ["𝕒"],
-  "outputs": {"-𝕒": {"scala.math.Numeric.negate": ["𝕒"]}}
+  "outputs": {"–𝕒": {"scala.math.Numeric.negate": ["𝕒"]}}
 }, {
   "name":    "add",
   "inputs":  ["𝕒", "𝕓"],
@@ -53,7 +53,7 @@ ast = decodeString (list function) """
 }, {
   "name":    "subtract",
   "inputs":  ["𝕒", "𝕓"],
-  "outputs": {"𝕒-𝕓": {"scala.math.Numeric.minus": ["𝕒", "𝕓"]}}
+  "outputs": {"𝕒–𝕓": {"scala.math.Numeric.minus": ["𝕒", "𝕓"]}}
 }, {
   "name":    "multiply",
   "inputs":  ["𝕒", "𝕓"],
@@ -61,7 +61,7 @@ ast = decodeString (list function) """
 }, {
   "name":    "divide",
   "inputs":  ["𝕒", "𝕓"],
-  "outputs": {"𝕒\\n——\\n𝕓": {"scala.math.Numeric.FloatIsFractional.div": ["𝕒", "𝕓"]}}
+  "outputs": {"𝕒\\n—\\n𝕓": {"scala.math.Numeric.FloatIsFractional.div": ["𝕒", "𝕓"]}}
 }, {
   "name":    "square",
   "inputs":  ["𝕒"],
@@ -74,7 +74,7 @@ ast = decodeString (list function) """
   "name":    "plus and minus",
   "inputs":  ["𝕒", "𝕓"],
   "outputs": { "𝕒+𝕓": {"add": ["𝕒", "𝕓"]},
-               "𝕒-𝕓": {"subtract": ["𝕒", "𝕓"]}
+               "𝕒–𝕓": {"subtract": ["𝕒", "𝕓"]}
   }
 }]""" |> Result.withDefault []
       |> List.map (\x -> (x.name, x))
