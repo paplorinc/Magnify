@@ -11,7 +11,7 @@ import Svg exposing (Svg)
 import Svg.Attributes exposing (..)
 import Tags exposing (em)
 import Task
-import Texts exposing (mapToSvg, splitText)
+import Texts exposing (charCount, mapToSvg, splitText)
 import Tuple2
 import Tuple4
 import VirtualDom
@@ -45,14 +45,14 @@ arrow values arrowWidth x_ h_ =
 drawParameter : String -> String -> String -> String -> String -> Svg Msg
 drawParameter x1_ x2_ y1_ y2_ name =
     Svg.g [] [ Svg.line [ x1 x1_, x2 x2_, y1 y1_, y2 y2_, stroke "red", strokeWidth "2", markerEnd "url(#arrowHead)" ] []
-             , Svg.text_ [ x x1_, y y1_, textAnchor "start" ] (mapToSvg name x1_ y1_) ]
+             , Svg.text_ [ x x1_, y y1_, textAnchor "middle" ] (mapToSvg name x1_ y1_) ]
 
 estimateSize : Function -> (Float, Float)
 estimateSize f =
     let formattedOutputs = List.map splitText (Dict.keys f.outputs)
-        width = maximum formattedOutputs (\s -> maximum s String.length |> ceiling)
+        width = maximum formattedOutputs (\s -> maximum s charCount |> ceiling)
         height = Basics.max (List.length f.inputs) (List.length (List.foldl (++) [] formattedOutputs)) |> toFloat
-    in (width - 1, height + 1)
+    in (width, height + 1)
 
 drawFunction : Function -> List (Svg Msg)
 drawFunction f =
