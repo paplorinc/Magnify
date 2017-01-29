@@ -40,7 +40,10 @@ arrow values arrowWidth x_ h_ =
     let yPos index = let size = List.length values |> toFloat
                          spacing = h_ / (size + 1)
                      in (1 + toFloat index) * spacing
-    in values |> List.indexedMap (\i name -> let y = yPos i |> em in drawParameter (em x_) (em (x_ + arrowWidth)) y y name)
+    in values |> List.indexedMap (\i name -> let x1 = x_ |> em
+                                                 x2 = x_ + arrowWidth |> em
+                                                 y = yPos i |> em
+                                             in drawParameter x1 x2 y y name)
 
 drawParameter : String -> String -> String -> String -> String -> Svg Msg
 drawParameter x1_ x2_ y1_ y2_ name =
@@ -51,7 +54,10 @@ estimateSize : Function -> (Float, Float)
 estimateSize f =
     let formattedOutputs = List.map splitText (Dict.keys f.outputs)
         width = maximum formattedOutputs (\s -> maximum s charCount |> ceiling)
-        height = Basics.max (List.length f.inputs) (List.length (List.foldl (++) [] formattedOutputs)) |> toFloat
+        height = let inputLength = f.inputs |> List.length
+                     outputLength = formattedOutputs |> List.concat |> List.length
+                 in Basics.max inputLength outputLength
+                 |> toFloat
     in (width + 0.5, height + 0.5)
 
 drawFunction : Function -> List (Svg Msg)
@@ -61,6 +67,6 @@ drawFunction f =
         arrowWidth = 1
         params = arrow f.inputs arrowWidth 0 h_
         returns = arrow (Dict.keys f.outputs) arrowWidth (w_ + arrowWidth) h_
-    in [ Svg.rect [ x (em arrowWidth), y "0", width <| em w_, height <| em h_, rx radius, ry radius, fill "gray" ] [] ]
+    in [ Svg.rect [ x <| em arrowWidth, y "0", width <| em w_, height <| em h_, rx radius, ry radius, fill "gray" ] [] ]
        ++ params
        ++ returns
