@@ -1,3 +1,5 @@
 module Tags exposing (..)
 
-em num = (num |> toString) ++ "em"
+em num = (toString num) ++ "em"
+
+translate x y = String.concat [ "translate(", toString x, ",", toString y, ")" ]

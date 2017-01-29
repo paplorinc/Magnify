@@ -10,6 +10,7 @@ import Json.Decode as Json
 import Svg exposing (Svg)
 import Svg.Attributes exposing (..)
 import Task
+import Tags
 import VirtualDom
 import Window
 
@@ -45,5 +46,5 @@ view model = Html.div []
 
 background : Model -> Svg Msg
 background model = Dict.values ast
-                |> List.indexedMap (\i f -> drawFunction f |> Svg.g [ transform (String.concat ["translate(", toString (50 + i * 120), ",50)"]) ] )
+                |> List.indexedMap (\i f -> drawFunction f |> Svg.g [ transform <| Tags.translate (50 + i * 120) 50 ] )
                 |> Svg.g []
