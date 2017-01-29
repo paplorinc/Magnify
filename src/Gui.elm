@@ -31,7 +31,7 @@ canvas w_ h_ background =
 
 arrowHead : Html Msg
 arrowHead = Svg.marker
-    [ id "arrowHead" , viewBox "0 0 10 10" , refX "5" , refY "5" , markerUnits "strokeWidth", markerWidth "6", markerHeight "6" , orient "auto" , fill "red" ]
+    [ id "arrowHead", viewBox "0 0 10 10", refX "5", refY "5", markerUnits "strokeWidth", markerWidth "4", markerHeight "4", orient "auto", fill "red" ]
     [ Svg.path [ d "M 0 0 L 10 5 L 0 10 z" ] [] ]
 
 
@@ -45,14 +45,14 @@ arrow values arrowWidth x_ h_ =
 drawParameter : String -> String -> String -> String -> String -> Svg Msg
 drawParameter x1_ x2_ y1_ y2_ name =
     Svg.g [] [ Svg.line [ x1 x1_, x2 x2_, y1 y1_, y2 y2_, stroke "red", strokeWidth "2", markerEnd "url(#arrowHead)" ] []
-             , Svg.text_ [ x x1_, y y1_, textAnchor "middle" ] (mapToSvg name x1_ y1_) ]
+             , Svg.text_ [ textAnchor "middle", dominantBaseline "middle" ] (mapToSvg name x1_ y1_) ]
 
 estimateSize : Function -> (Float, Float)
 estimateSize f =
     let formattedOutputs = List.map splitText (Dict.keys f.outputs)
         width = maximum formattedOutputs (\s -> maximum s charCount |> ceiling)
         height = Basics.max (List.length f.inputs) (List.length (List.foldl (++) [] formattedOutputs)) |> toFloat
-    in (width, height + 1)
+    in (width + 0.5, height + 0.5)
 
 drawFunction : Function -> List (Svg Msg)
 drawFunction f =
