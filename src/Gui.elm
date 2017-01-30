@@ -52,7 +52,7 @@ arrow values arrowWidth w_ x_ h_ =
 drawParameter : String -> String -> String -> String -> List (Svg Msg) -> Svg Msg
 drawParameter x1_ x2_ y1_ y2_ text =
     Svg.g [] [ Svg.line [ x1 x1_, x2 x2_, y1 y1_, y2 y2_, stroke "red", strokeWidth "1.5", markerEnd "url(#arrowHead)" ] []
-             , Svg.text_ [ x x1_, y y1_, textAnchor "end", dominantBaseline "central" ] text ]
+             , Svg.text_ [ x x1_, y y1_, textAnchor "end", dominantBaseline "middle" ] text ]
 
 estimateSize : Function -> (Float, Float)
 estimateSize f =
