@@ -33,7 +33,7 @@ ast = decodeString (list function) """
 [{
   "name":    "solve the quadratic equation (𝕔x² + 𝕓x + 𝕒 = 0)",
   "inputs":  ["𝕔", "𝕓", "𝕒"],
-  "outputs": { "–𝕓±√Δ\\n———\\n 2𝕔":
+  "outputs": { "–𝕓±√Δ\\n—————\\n2𝕔 ":
                  {"divide": [{"plus and minus": [{"negate": ["𝕓"]}
                                                 ,{"sqrt": {"subtract":[{"square": ["𝕓"]}
                                                                       ,{"multiply": ["4","𝕔","𝕒"]}]}}]}
@@ -41,7 +41,7 @@ ast = decodeString (list function) """
 }, {
   "name":    "solve the linear equation (𝕓x + 𝕒 = 0)",
   "inputs":  ["𝕓", "𝕒"],
-  "outputs": {"–𝕒\\n—\\n 𝕓": {"negate": {"divide": ["𝕒", "𝕓"]}}}
+  "outputs": {"–𝕒\\n——\\n𝕓": {"negate": {"divide": ["𝕒", "𝕓"]}}}
 }, {
   "name":    "negate",
   "inputs":  ["𝕒"],
