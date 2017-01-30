@@ -31,7 +31,7 @@ canvas w_ h_ background =
 
 arrowHead : Html Msg
 arrowHead = Svg.marker
-    [ id "arrowHead", viewBox "0 0 10 10", refX "5", refY "5", markerUnits "strokeWidth", markerWidth "3", markerHeight "3", orient "auto", fill "red" ]
+    [ id "arrowHead", viewBox "0 0 10 10", refX "5", refY "5", markerUnits "strokeWidth", markerWidth "4", markerHeight "4", orient "auto", fill "red" ]
     [ Svg.path [ d "M 0 0 L 10 5 L 0 10 z" ] [] ]
 
 
@@ -39,11 +39,11 @@ arrow : List String -> Float -> Float -> Float -> Float -> List (Svg Msg)
 arrow values arrowWidth w_ x_ h_ =
     let yPos index = let size = List.length values |> toFloat
                          spacing = h_ / (size + 1)
-                     in (1 + toFloat index) * spacing
+                     in (1 + index) * spacing
     in values |> List.indexedMap (\i name ->
                      let x1 = w_ |> charWidth
                          x2 = w_ + arrowWidth |> charWidth
-                         y = yPos i
+                         y = yPos <| toFloat i
                          y1 = y |> charHeight
                          y2 = y |> charHeight
                          text = mapToSvg (splitText name) w_ x_ y
@@ -61,7 +61,7 @@ estimateSize f =
         height = let inputLength = f.inputs |> List.length
                      outputLength = formattedOutputs |> List.concat |> List.length
                  in Basics.max inputLength outputLength |> toFloat
-    in (width + 0.5, height)
+    in (width + 1, height)
 
 drawFunction : Function -> List (Svg Msg)
 drawFunction f =
@@ -70,6 +70,6 @@ drawFunction f =
         arrowWidth = 2
         params = arrow f.inputs arrowWidth 0 0 h_
         returns = arrow (Dict.keys f.outputs) arrowWidth (w_ + arrowWidth) arrowWidth h_
-    in [ Svg.rect [ x <| charWidth arrowWidth, y "0", width <| charWidth w_, height <| charHeight h_, rx radius, ry radius, fill "gray" ] [] ]
+    in [ Svg.rect [ x <| charWidth arrowWidth, y "0", width <| charWidth w_, height <| charHeight h_, rx radius, ry radius, fill "LightGray", stroke "LightGray", strokeWidth "0.25em" ] [] ]
        ++ params
        ++ returns
