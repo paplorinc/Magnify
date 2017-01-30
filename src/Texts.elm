@@ -15,10 +15,9 @@ charCount string = let regexAstralSymbols = Regex.regex "[\\uD800-\\uDBFF][\\uDC
 splitText text = String.split "\n" text
 
 mapToSvg lines w_ x_ y_ =
-    let offsetY i = case i of 0 -> toFloat (List.length lines - 1) / -2
-                              _ -> 1
-        x_ = charWidth w_
-        dy_ i = charHeight <| offsetY i
+    let x_ = charWidth w_
+        dy_ i = charHeight <| case i of 0 -> toFloat (List.length lines - 1) / -2
+                                        _ -> 1
     in List.indexedMap (\i line ->
            Svg.tspan [ x x_, dy (dy_ i), fontFamily "monospace" ]
                      [ Svg.text line ])
