@@ -70,6 +70,6 @@ drawFunction f =
         arrowWidth = 2
         params = arrow f.inputs arrowWidth 0 0 h_
         returns = arrow (Dict.keys f.outputs) arrowWidth (w_ + arrowWidth) arrowWidth h_
-    in [ Svg.rect [ x <| charWidth arrowWidth, y "0", width <| charWidth w_, height <| charHeight h_, rx radius, ry radius, fill "LightGray", stroke "LightGray", strokeWidth "0.25em" ] [] ]
-       ++ params
-       ++ returns
+    in [ Svg.rect [ x <| charWidth arrowWidth, y "0", width <| charWidth w_, height <| charHeight h_, rx radius, ry radius, fill "LightGray", stroke "LightGray", strokeWidth "0.25em" ]
+                  [ Svg.title [] [ Svg.text f.name ] ]
+       ] ++ params ++ returns
