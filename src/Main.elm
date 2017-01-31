@@ -15,8 +15,14 @@ import VirtualDom
 import Window
 import Mouse
 import Keyboard
+import Keys
+import Mouses
+import Windows
 
-type alias Model = { size : Window.Size, pos : Mouse.Position, code : Keyboard.KeyCode }
+type alias Model = { size : Window.Size
+                   , pos : Mouse.Position
+                   , code : Keyboard.KeyCode
+                   , selectedIndex : Int }
 
 getWidth : { b | size : { a | width : number } } -> number
 getWidth model  = model.size.width  - 5 -- clientWidth?
@@ -29,15 +35,15 @@ main = Html.program { init = init, update = update, subscriptions = subscription
 
 
 init : ( Model, Cmd Msg )
-init = ( { size = Window.Size 600 600, pos = Mouse.Position 0 0, code = 0 }
+init = ( { size = Window.Size 600 600, pos = Mouse.Position 0 0, code = 0, selectedIndex = 0 }
        , Task.perform WindowSizeMsg Window.size)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        WindowSizeMsg s -> ( { model | size = s }, Cmd.none )
-        MouseMsg p      -> ( { model | pos = p }, Cmd.none )
-        KeyMsg c        -> ( { model | code = c }, Cmd.none)
+        WindowSizeMsg s -> ( Windows.update model s, Cmd.none )
+        MouseMsg p      -> ( Mouses.update model p, Cmd.none )
+        KeyMsg c        -> ( Keys.update model c, Cmd.none)
         _               -> Debug.crash "update"
 
 subscriptions : a -> Sub Msg
@@ -53,5 +59,7 @@ view model = Html.div []
 
 background : Model -> Svg Msg
 background model = Dict.values ast
-                |> List.indexedMap (\i f -> drawFunction f |> Svg.g [ transform <| Tags.translate (50 + i * 120) 50 ] )
+                |> List.indexedMap (\i f ->
+                        let selectedFill = if i == model.selectedIndex then "green" else "none"
+                        in drawFunction f |> Svg.g [ transform <| Tags.translate (50 + i * 120) 50, stroke selectedFill ] )
                 |> Svg.g []
