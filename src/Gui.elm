@@ -16,11 +16,13 @@ import Tuple2
 import Tuple4
 import VirtualDom
 import Window
+import Mouse
+import Keyboard
 
-type alias Position = { x : Float, y : Float }
-type Msg = Error
-         | WindowSize Window.Size
-         | MouseMove Position
+type Msg = ErrorMsg
+         | WindowSizeMsg Window.Size
+         | MouseMsg Mouse.Position
+         | KeyMsg Keyboard.KeyCode
 
 canvas : Int -> Int -> Html Msg -> Svg Msg
 canvas w_ h_ background =

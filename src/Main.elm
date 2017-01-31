@@ -13,8 +13,10 @@ import Task
 import Tags
 import VirtualDom
 import Window
+import Mouse
+import Keyboard
 
-type alias Model = { size : Window.Size, pos : Position }
+type alias Model = { size : Window.Size, pos : Mouse.Position, code : Keyboard.KeyCode }
 
 getWidth : { b | size : { a | width : number } } -> number
 getWidth model  = model.size.width  - 5 -- clientWidth?
@@ -27,18 +29,23 @@ main = Html.program { init = init, update = update, subscriptions = subscription
 
 
 init : ( Model, Cmd Msg )
-init = ( { size = Window.Size 600 600, pos = Position 0 0 }
-       , Task.perform WindowSize Window.size)
+init = ( { size = Window.Size 600 600, pos = Mouse.Position 0 0, code = 0 }
+       , Task.perform WindowSizeMsg Window.size)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        WindowSize { width, height } -> ( { model | size = Window.Size width height }, Cmd.none )
-        MouseMove pos                -> ( { model | pos = pos }, Cmd.none )
-        _                            -> Debug.crash "update"
+        WindowSizeMsg s -> ( { model | size = s }, Cmd.none )
+        MouseMsg p      -> ( { model | pos = p }, Cmd.none )
+        KeyMsg c        -> ( { model | code = c }, Cmd.none)
+        _               -> Debug.crash "update"
 
 subscriptions : a -> Sub Msg
-subscriptions model = Window.resizes WindowSize
+subscriptions model =
+    Sub.batch
+        [ Window.resizes WindowSizeMsg
+        , Mouse.clicks MouseMsg
+        , Keyboard.downs KeyMsg ]
 
 view : Model -> Html Msg
 view model = Html.div []
