@@ -12,7 +12,7 @@ charCount string = let regexAstralSymbols = Regex.regex "[\\uD800-\\uDBFF][\\uDC
                    in Regex.replace Regex.All regexAstralSymbols (\_ -> ".") string
                    |> String.length
 
-splitText text = String.split "\n" text
+splitLines text = String.split "\n" text
 
 mapToSvg lines w_ x_ y_ =
     let x_ = charWidth w_

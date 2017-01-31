@@ -11,7 +11,7 @@ import Svg exposing (Svg)
 import Svg.Attributes exposing (..)
 import Tags exposing (..)
 import Task
-import Texts exposing (charCount, mapToSvg, splitText)
+import Texts exposing (charCount, mapToSvg, splitLines)
 import Tuple2
 import Tuple4
 import VirtualDom
@@ -46,7 +46,7 @@ arrow values arrowWidth w_ x_ h_ =
                          y = yPos <| toFloat i
                          y1 = y |> charHeight
                          y2 = y |> charHeight
-                         text = mapToSvg (splitText name) w_ x_ y
+                         text = mapToSvg (splitLines name) w_ x_ y
                      in drawParameter x1 x2 y1 y2 text)
 
 drawParameter : String -> String -> String -> String -> List (Svg Msg) -> Svg Msg
@@ -56,7 +56,7 @@ drawParameter x1_ x2_ y1_ y2_ text =
 
 estimateSize : Function -> (Float, Float)
 estimateSize f =
-    let formattedOutputs = List.map splitText (Dict.keys f.outputs)
+    let formattedOutputs = List.map splitLines (Dict.keys f.outputs)
         width = maximum (\s -> maximum charCount s |> ceiling) formattedOutputs
         height = let inputLength = f.inputs |> List.length
                      outputLength = formattedOutputs |> List.concat |> List.length
