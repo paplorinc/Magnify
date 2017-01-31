@@ -60,6 +60,6 @@ view model = Html.div []
 background : Model -> Svg Msg
 background model = Dict.values ast
                 |> List.indexedMap (\i f ->
-                        let selectedFill = if i == model.selectedIndex then "green" else "none"
-                        in drawFunction f |> Svg.g [ transform <| Tags.translate (50 + i * 120) 50, stroke selectedFill ] )
+                        let selected = if i == model.selectedIndex then 1.5 else 1
+                        in drawFunction f |> Svg.g [ Tags.transform [ Tags.translate (50 + i * 120) 50, Tags.scale selected ] ] )
                 |> Svg.g []
