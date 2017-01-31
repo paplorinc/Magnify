@@ -8,9 +8,10 @@ import Tags exposing (..)
 import Regex
 import Tuple2
 
-charCount string = let regexAstralSymbols = Regex.regex "[\\uD800-\\uDBFF][\\uDC00-\\uDFFF]"
-                   in Regex.replace Regex.All regexAstralSymbols (\_ -> ".") string
-                   |> String.length
+charCount string =
+    let regexAstralSymbols = Regex.regex "[\\uD800-\\uDBFF][\\uDC00-\\uDFFF]"
+    in Regex.replace Regex.All regexAstralSymbols (\_ -> ".") string
+    |> String.length
 
 splitLines text = String.split "\n" text
 

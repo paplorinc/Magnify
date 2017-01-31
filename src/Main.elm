@@ -24,21 +24,11 @@ type alias Model = { size : Window.Size
                    , code : Keyboard.KeyCode
                    , selectedIndex : Int }
 
-getWidth : { b | size : { a | width : number } } -> number
-getWidth model  = model.size.width  - 5 -- clientWidth?
-
-getHeight : { b | size : { a | height : number } } -> number
-getHeight model = model.size.height - 5
-
-main : Program Never Model Msg
 main = Html.program { init = init, update = update, subscriptions = subscriptions, view = view }
 
-
-init : ( Model, Cmd Msg )
 init = ( { size = Window.Size 600 600, pos = Mouse.Position 0 0, code = 0, selectedIndex = 0 }
        , Task.perform WindowSizeMsg Window.size)
 
-update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         WindowSizeMsg s -> ( Windows.update model s, Cmd.none )
@@ -46,20 +36,21 @@ update msg model =
         KeyMsg c        -> ( Keys.update model c, Cmd.none)
         _               -> Debug.crash "update"
 
-subscriptions : a -> Sub Msg
 subscriptions model =
     Sub.batch
         [ Window.resizes WindowSizeMsg
         , Mouse.clicks MouseMsg
         , Keyboard.downs KeyMsg ]
 
-view : Model -> Html Msg
-view model = Html.div []
-                      [ canvas (getWidth model) (getHeight model) (background model) ]
+view model =
+    let w = model.size.width  - 5 |> toString
+        h = model.size.height - 5 |> toString
+        b = background model
+    in Html.div [] [ canvas w h b ]
 
-background : Model -> Svg Msg
-background model = Dict.values ast
-                |> List.indexedMap (\i f ->
-                        let selected = if i == model.selectedIndex then 1.5 else 1
-                        in drawFunction f |> Svg.g [ Tags.transform [ Tags.translate (50 + i * 120) 50, Tags.scale selected ] ] )
-                |> Svg.g []
+background model =
+    Dict.values ast
+ |> List.indexedMap (\i f ->
+        let selected = if i == model.selectedIndex then 1.5 else 1
+        in drawFunction f |> Svg.g [ Tags.transform [ Tags.translate (50 + i * 120) 50, Tags.scale selected ] ] )
+ |> Svg.g []
